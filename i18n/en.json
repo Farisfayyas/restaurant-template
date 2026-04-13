@@ -1,0 +1,149 @@
+{
+  "nav": {
+    "home": "Home",
+    "menu": "Menu",
+    "reservations": "Reservations",
+    "order": "Order Now",
+    "location": "Location",
+    "gallery": "Gallery",
+    "about": "About Us"
+  },
+  "hero": {
+    "bookTable": "Book a Table",
+    "viewMenu": "View Menu",
+    "openNow": "Open Now",
+    "closedNow": "Closed",
+    "closes": "Closes at",
+    "opens": "Opens at",
+    "scrollDown": "Scroll to explore"
+  },
+  "home": {
+    "featuredTitle": "Signature Dishes",
+    "featuredSubtitle": "Crafted with intention. Served with passion.",
+    "reviewsTitle": "What Our Guests Say",
+    "reviewsSubtitle": "Words from those who've sat at our table.",
+    "aboutTitle": "Our Story",
+    "aboutCta": "Read Our Full Story",
+    "reserveCta": "Reserve Your Table",
+    "orderCta": "Order Now"
+  },
+  "menu": {
+    "title": "Our Menu",
+    "subtitle": "Seasonal ingredients. Timeless technique.",
+    "filterAll": "All",
+    "filterVegan": "Vegan",
+    "filterSpicy": "Spicy",
+    "filterGlutenFree": "Gluten Free",
+    "pairsWell": "Pairs well with",
+    "chefsRecommendation": "Chef's Recommendation",
+    "addToOrder": "Add to Order",
+    "orderNow": "Order Online",
+    "aed": "AED"
+  },
+  "dietary": {
+    "vegan": "Vegan",
+    "spicy": "Spicy",
+    "glutenFree": "GF",
+    "chefSpecial": "Chef's Special"
+  },
+  "reservations": {
+    "title": "Reserve Your Table",
+    "subtitle": "We look forward to welcoming you.",
+    "name": "Full Name",
+    "namePlaceholder": "Your full name",
+    "phone": "Phone Number",
+    "phonePlaceholder": "+971 XX XXX XXXX",
+    "email": "Email Address",
+    "emailPlaceholder": "your@email.com",
+    "date": "Preferred Date",
+    "time": "Preferred Time",
+    "guests": "Number of Guests",
+    "guestsPlaceholder": "Select party size",
+    "requests": "Special Requests",
+    "requestsPlaceholder": "Dietary requirements, celebrations, seating preferences…",
+    "submit": "Request Reservation",
+    "submitting": "Sending…",
+    "successTitle": "Reservation Request Sent!",
+    "successMessage": "We'll confirm your booking within 2 hours. A confirmation will be sent to your email.",
+    "whatsappConfirm": "Message us on WhatsApp",
+    "errorMessage": "Something went wrong. Please try again or contact us directly.",
+    "required": "This field is required",
+    "guests1": "1 Guest",
+    "guests2": "2 Guests",
+    "guests3": "3 Guests",
+    "guests4": "4 Guests",
+    "guests5": "5 Guests",
+    "guests6": "6 Guests",
+    "guests7": "7 Guests",
+    "guests8": "8 Guests",
+    "guestsMore": "9+ Guests"
+  },
+  "order": {
+    "title": "Order Online",
+    "subtitle": "Place your order via WhatsApp — we'll confirm and deliver.",
+    "addToOrder": "Add",
+    "remove": "Remove",
+    "yourOrder": "Your Order",
+    "emptyOrder": "Your order is empty. Add items from the menu.",
+    "subtotal": "Subtotal",
+    "sendOrder": "Send Order via WhatsApp",
+    "orderSent": "Opening WhatsApp…",
+    "note": "Orders are confirmed directly with our team via WhatsApp.",
+    "aed": "AED"
+  },
+  "location": {
+    "title": "Find Us",
+    "subtitle": "In the heart of Abu Dhabi.",
+    "address": "Address",
+    "copyAddress": "Copy Address",
+    "copied": "Copied!",
+    "hours": "Opening Hours",
+    "getDirections": "Get Directions",
+    "callUs": "Call Us",
+    "today": "Today",
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "closed": "Closed",
+    "holidayHours": "Holiday Hours"
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "A glimpse into our world.",
+    "filterAll": "All",
+    "filterInterior": "Interior",
+    "filterFood": "Food",
+    "filterEvents": "Events",
+    "close": "Close"
+  },
+  "about": {
+    "title": "About Us",
+    "awards": "Featured In",
+    "reserveCta": "Reserve a Table"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "followUs": "Follow Us",
+    "openingHours": "Opening Hours"
+  },
+  "mobile": {
+    "call": "Call",
+    "location": "Location",
+    "book": "Book"
+  },
+  "whatsapp": {
+    "greeting": "Hi! I have a question about"
+  },
+  "common": {
+    "learnMore": "Learn More",
+    "viewAll": "View All",
+    "back": "Back"
+  }
+}

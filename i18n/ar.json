@@ -1,0 +1,149 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "menu": "القائمة",
+    "reservations": "الحجز",
+    "order": "اطلب الآن",
+    "location": "الموقع",
+    "gallery": "المعرض",
+    "about": "من نحن"
+  },
+  "hero": {
+    "bookTable": "احجز طاولة",
+    "viewMenu": "عرض القائمة",
+    "openNow": "مفتوح الآن",
+    "closedNow": "مغلق",
+    "closes": "يغلق الساعة",
+    "opens": "يفتح الساعة",
+    "scrollDown": "مرر للاستكشاف"
+  },
+  "home": {
+    "featuredTitle": "أطباق مميزة",
+    "featuredSubtitle": "مصنوعة بعناية. مقدمة بشغف.",
+    "reviewsTitle": "ماذا يقول ضيوفنا",
+    "reviewsSubtitle": "كلمات من جلسوا على طاولتنا.",
+    "aboutTitle": "قصتنا",
+    "aboutCta": "اقرأ قصتنا كاملة",
+    "reserveCta": "احجز طاولتك",
+    "orderCta": "اطلب الآن"
+  },
+  "menu": {
+    "title": "قائمتنا",
+    "subtitle": "مكونات موسمية. تقنية خالدة.",
+    "filterAll": "الكل",
+    "filterVegan": "نباتي",
+    "filterSpicy": "حار",
+    "filterGlutenFree": "خالٍ من الغلوتين",
+    "pairsWell": "يتناسب مع",
+    "chefsRecommendation": "توصية الشيف",
+    "addToOrder": "أضف للطلب",
+    "orderNow": "اطلب أونلاين",
+    "aed": "درهم"
+  },
+  "dietary": {
+    "vegan": "نباتي",
+    "spicy": "حار",
+    "glutenFree": "خالٍ من الغلوتين",
+    "chefSpecial": "اختيار الشيف"
+  },
+  "reservations": {
+    "title": "احجز طاولتك",
+    "subtitle": "نتطلع إلى الترحيب بكم.",
+    "name": "الاسم الكامل",
+    "namePlaceholder": "اسمك الكامل",
+    "phone": "رقم الهاتف",
+    "phonePlaceholder": "+971 XX XXX XXXX",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "بريدك@الإلكتروني.com",
+    "date": "التاريخ المفضل",
+    "time": "الوقت المفضل",
+    "guests": "عدد الضيوف",
+    "guestsPlaceholder": "اختر حجم المجموعة",
+    "requests": "طلبات خاصة",
+    "requestsPlaceholder": "متطلبات غذائية، مناسبات، تفضيلات الجلوس…",
+    "submit": "طلب حجز",
+    "submitting": "جارٍ الإرسال…",
+    "successTitle": "تم إرسال طلب الحجز!",
+    "successMessage": "سنؤكد حجزك خلال ساعتين. سيتم إرسال تأكيد إلى بريدك الإلكتروني.",
+    "whatsappConfirm": "راسلنا على واتساب",
+    "errorMessage": "حدث خطأ ما. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.",
+    "required": "هذا الحقل مطلوب",
+    "guests1": "١ ضيف",
+    "guests2": "٢ ضيوف",
+    "guests3": "٣ ضيوف",
+    "guests4": "٤ ضيوف",
+    "guests5": "٥ ضيوف",
+    "guests6": "٦ ضيوف",
+    "guests7": "٧ ضيوف",
+    "guests8": "٨ ضيوف",
+    "guestsMore": "٩+ ضيوف"
+  },
+  "order": {
+    "title": "اطلب أونلاين",
+    "subtitle": "ضع طلبك عبر واتساب — سنؤكد ونوصّل.",
+    "addToOrder": "أضف",
+    "remove": "إزالة",
+    "yourOrder": "طلبك",
+    "emptyOrder": "طلبك فارغ. أضف أصنافاً من القائمة.",
+    "subtotal": "المجموع",
+    "sendOrder": "أرسل الطلب عبر واتساب",
+    "orderSent": "جارٍ فتح واتساب…",
+    "note": "يتم تأكيد الطلبات مباشرة مع فريقنا عبر واتساب.",
+    "aed": "درهم"
+  },
+  "location": {
+    "title": "جدنا",
+    "subtitle": "في قلب أبوظبي.",
+    "address": "العنوان",
+    "copyAddress": "نسخ العنوان",
+    "copied": "تم النسخ!",
+    "hours": "ساعات العمل",
+    "getDirections": "الحصول على الاتجاهات",
+    "callUs": "اتصل بنا",
+    "today": "اليوم",
+    "days": {
+      "monday": "الاثنين",
+      "tuesday": "الثلاثاء",
+      "wednesday": "الأربعاء",
+      "thursday": "الخميس",
+      "friday": "الجمعة",
+      "saturday": "السبت",
+      "sunday": "الأحد"
+    },
+    "closed": "مغلق",
+    "holidayHours": "ساعات الأعياد"
+  },
+  "gallery": {
+    "title": "المعرض",
+    "subtitle": "لمحة من عالمنا.",
+    "filterAll": "الكل",
+    "filterInterior": "الداخل",
+    "filterFood": "الطعام",
+    "filterEvents": "الفعاليات",
+    "close": "إغلاق"
+  },
+  "about": {
+    "title": "من نحن",
+    "awards": "نُذكر في",
+    "reserveCta": "احجز طاولة"
+  },
+  "footer": {
+    "rights": "جميع الحقوق محفوظة.",
+    "privacy": "سياسة الخصوصية",
+    "followUs": "تابعنا",
+    "openingHours": "ساعات العمل"
+  },
+  "mobile": {
+    "call": "اتصل",
+    "location": "الموقع",
+    "book": "احجز"
+  },
+  "whatsapp": {
+    "greeting": "مرحباً! لدي سؤال حول"
+  },
+  "common": {
+    "learnMore": "اعرف المزيد",
+    "viewAll": "عرض الكل",
+    "back": "رجوع"
+  }
+}
