@@ -17,7 +17,7 @@ export default function AnimatedSection({
   direction = "up",
 }: AnimatedSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "0px" });
 
   const initialMap = {
     up:    { opacity: 0, y: 40 },

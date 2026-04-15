@@ -1,8 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import VideoHero from "@/components/home/VideoHero";
+import FoodMarquee from "@/components/home/FoodMarquee";
 import FeaturedDishes from "@/components/home/FeaturedDishes";
 import SocialProof from "@/components/home/SocialProof";
+import HomeInfoStrip from "@/components/home/HomeInfoStrip";
 import AboutTeaser from "@/components/home/AboutTeaser";
 import restaurant from "@/config/restaurant.config";
 
@@ -40,6 +42,7 @@ export default async function HomePage({
         menuLabel={t("hero.viewMenu")}
         scrollLabel={t("hero.scrollDown")}
       />
+      <FoodMarquee />
       <FeaturedDishes
         locale={locale}
         title={t("home.featuredTitle")}
@@ -52,6 +55,7 @@ export default async function HomePage({
         title={t("home.reviewsTitle")}
         subtitle={t("home.reviewsSubtitle")}
       />
+      <HomeInfoStrip locale={locale} />
       <AboutTeaser
         locale={locale}
         title={t("home.aboutTitle")}
