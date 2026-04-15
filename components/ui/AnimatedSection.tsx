@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 interface AnimatedSectionProps {
   children: React.ReactNode;
@@ -17,13 +17,26 @@ export default function AnimatedSection({
   direction = "up",
 }: AnimatedSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
+  // Always call — hooks must not be conditional.
   const isInView = useInView(ref, { once: true, margin: "0px" });
 
-  // opacity is always 1 — text is never hidden regardless of scroll position.
-  // Only the translate (y/x slide) animates in; opacity is not part of the
-  // entrance effect. This eliminates the class of mobile rendering bug where
-  // Framer Motion leaves elements at opacity:0 due to IntersectionObserver
-  // misfiring on physical devices.
+  const wrapperClass = `animated-section${className ? ` ${className}` : ""}`;
+
+  // On mobile: bypass Framer Motion entirely. Renders a plain <div> with no
+  // animation library involvement. This eliminates framer-motion as a possible
+  // cause of hydration failures or invisible content on physical devices.
+  if (isMobile) {
+    return <div className={wrapperClass}>{children}</div>;
+  }
+
+  // Desktop: slide-in animation. opacity is always 1 — only the translate
+  // (y/x) animates, so content is never hidden even if isInView misfires.
   const initialMap = {
     up:    { opacity: 1, y: 40 },
     left:  { opacity: 1, x: -40 },
@@ -41,7 +54,7 @@ export default function AnimatedSection({
   return (
     <motion.div
       ref={ref}
-      className={`animated-section${className ? ` ${className}` : ""}`}
+      className={wrapperClass}
       initial={initialMap[direction]}
       animate={isInView ? animateMap[direction] : initialMap[direction]}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}

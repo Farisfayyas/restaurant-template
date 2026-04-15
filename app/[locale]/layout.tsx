@@ -62,7 +62,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={isRtl ? "rtl" : "ltr"} className="h-full">
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           <Navbar />
           <main className="flex-1 pb-16 md:pb-0">
