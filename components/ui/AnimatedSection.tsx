@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 interface AnimatedSectionProps {
   children: React.ReactNode;
@@ -17,7 +17,13 @@ export default function AnimatedSection({
   direction = "up",
 }: AnimatedSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "0px" });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
+  const isInView = useInView(ref, { once: true, margin: isMobile ? "100px" : "0px" });
 
   const initialMap = {
     up:    { opacity: 0, y: 40 },
@@ -36,7 +42,7 @@ export default function AnimatedSection({
   return (
     <motion.div
       ref={ref}
-      className={className}
+      className={`animated-section${className ? ` ${className}` : ""}`}
       initial={initialMap[direction]}
       animate={isInView ? animateMap[direction] : initialMap[direction]}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}

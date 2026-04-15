@@ -281,17 +281,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 .marquee-track-reverse:hover { animation-play-state: paused; }
 
-/* ─── Dark mode lock ───────────────────────────────────── */
-/* Belt-and-suspenders: even if a browser ignores color-scheme:light above,
-   these rules hard-lock the palette so text is always legible */
-@media (prefers-color-scheme: dark) {
-  html { color-scheme: light; }
-  body {
-    background-color: #FAF7F2 !important;
-    color: #1C1C1C !important;
-  }
-}
-
 /* ─── Mobile sticky safe area ──────────────────────────── */
 .mobile-sticky { padding-bottom: env(safe-area-inset-bottom); }
 
@@ -310,5 +299,24 @@ h1, h2, h3, h4, h5, h6 {
   }
   .marquee-track-reverse {
     animation: marquee-reverse 40s linear infinite !important;
+  }
+}
+
+/* ─── Mobile animation fail-safe ───────────────────────── */
+/* If the IntersectionObserver fails to fire on mobile and JS leaves
+   elements at opacity:0, this CSS forces them visible after a 2s grace
+   period — long enough for normal animations to complete first.
+   CSS animations override Framer Motion's inline opacity/transform. */
+@media (max-width: 767px) {
+  @keyframes forceShow {
+    to {
+      opacity: 1 !important;
+      transform: none !important;
+      visibility: visible !important;
+    }
+  }
+
+  .animated-section {
+    animation: forceShow 0.01s ease forwards 2s;
   }
 }
