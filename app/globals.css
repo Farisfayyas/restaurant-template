@@ -311,6 +311,21 @@ h1, h2, h3, h4, h5, h6 {
     position: relative !important;
     z-index: 50 !important;
   }
+
+  /* Ensure interactive elements are always above any invisible overlays
+     (compositing layers, gradient divs) that may capture tap events. */
+  button, a, select, input {
+    position: relative !important;
+    z-index: 60 !important;
+    pointer-events: auto !important;
+  }
+
+  /* Active-state feedback so you can confirm the device is registering
+     the tap even if something else is wrong downstream. */
+  button:active, a:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
 }
 
 /* ─── Mobile animation fail-safe ───────────────────────── */
