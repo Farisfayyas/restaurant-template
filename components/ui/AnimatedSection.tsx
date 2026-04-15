@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 
 interface AnimatedSectionProps {
   children: React.ReactNode;
@@ -17,31 +17,18 @@ export default function AnimatedSection({
   direction = "up",
 }: AnimatedSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const isInView = useInView(ref, { once: true, margin: "0px" });
 
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
-
-  // 200px margin triggers the observer before the element fully enters the
-  // viewport — helpful on desktop. On mobile we bypass isInView entirely.
-  const isInView = useInView(ref, { once: true, margin: "200px" });
-
-  // On mobile: show immediately after mount (isMobile flips to true in the
-  // first useEffect, triggering Framer Motion to animate to the visible state
-  // without waiting for IntersectionObserver, which can misfire on mobile).
-  const shouldShow = isMobile || isInView;
-
-  // opacity:0.01 instead of 0 — some mobile browsers (WebKit/Blink) skip
-  // painting elements with opacity:0 entirely as a memory optimisation,
-  // removing them from the GPU render pipeline so they never appear even
-  // after the animation fires. 0.01 is visually identical but forces the
-  // browser to keep a layer allocated for the element from the first paint.
+  // opacity is always 1 — text is never hidden regardless of scroll position.
+  // Only the translate (y/x slide) animates in; opacity is not part of the
+  // entrance effect. This eliminates the class of mobile rendering bug where
+  // Framer Motion leaves elements at opacity:0 due to IntersectionObserver
+  // misfiring on physical devices.
   const initialMap = {
-    up:    { opacity: 0.01, y: 40 },
-    left:  { opacity: 0.01, x: -40 },
-    right: { opacity: 0.01, x: 40 },
-    none:  { opacity: 0.01 },
+    up:    { opacity: 1, y: 40 },
+    left:  { opacity: 1, x: -40 },
+    right: { opacity: 1, x: 40 },
+    none:  { opacity: 1 },
   };
 
   const animateMap = {
@@ -56,7 +43,7 @@ export default function AnimatedSection({
       ref={ref}
       className={`animated-section${className ? ` ${className}` : ""}`}
       initial={initialMap[direction]}
-      animate={shouldShow ? animateMap[direction] : initialMap[direction]}
+      animate={isInView ? animateMap[direction] : initialMap[direction]}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
