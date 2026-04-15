@@ -14,7 +14,7 @@ export default function OpenStatusBadge({ locale, dark = true }: OpenStatusBadge
     <div
       className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide ${
         dark
-          ? "bg-white/15 backdrop-blur-sm text-white border border-white/20"
+          ? "bg-white/15 sm:backdrop-blur-sm text-white border border-white/20"
           : `${status.isOpen ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-600 border border-red-200"}`
       }`}
     >

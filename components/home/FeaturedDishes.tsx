@@ -38,7 +38,7 @@ export default function FeaturedDishes({ locale, title, subtitle, menuLabel, die
             const desc = locale === "ar" ? item.descriptionAr : item.description;
             return (
               <AnimatedSection key={item.id} delay={i * 0.12} direction="up">
-                <div className="card-hover bg-white/80 backdrop-blur-sm overflow-hidden group" style={{ boxShadow: "0 4px 20px rgba(28,28,28,0.07)" }}>
+                <div className="card-hover bg-white/80 md:backdrop-blur-sm overflow-hidden group" style={{ boxShadow: "0 4px 20px rgba(28,28,28,0.07)" }}>
                   {/* Image */}
                   <div className="relative h-56 overflow-hidden bg-[var(--color-surface-2)]">
                     <Image

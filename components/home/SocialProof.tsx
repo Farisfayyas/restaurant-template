@@ -60,7 +60,7 @@ export default function SocialProof({ locale, title, subtitle }: SocialProofProp
             const text = locale === "ar" && review.textAr ? review.textAr : review.text;
             return (
               <AnimatedSection key={i} delay={i * 0.1} direction="up">
-                <blockquote className="card-hover bg-white/80 backdrop-blur-sm p-7 h-full flex flex-col" style={{ boxShadow: "0 4px 20px rgba(28,28,28,0.06)" }}>
+                <blockquote className="card-hover bg-white/80 md:backdrop-blur-sm p-7 h-full flex flex-col" style={{ boxShadow: "0 4px 20px rgba(28,28,28,0.06)" }}>
                   <div className="flex items-center justify-between mb-4">
                     <StarRating rating={review.rating} />
                     <SourceLogo source={review.source} />

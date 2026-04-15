@@ -163,7 +163,7 @@ function MenuItemCard({
 
   return (
     <motion.div
-      className="group relative flex gap-4 p-5 bg-white/70 backdrop-blur-sm border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:shadow-lg transition-all rounded-2xl"
+      className="group relative flex gap-4 p-5 bg-white/70 md:backdrop-blur-sm border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:shadow-lg transition-all rounded-2xl"
       style={{ boxShadow: "0 2px 12px rgba(28,28,28,0.06)" }}
       layout
       initial={{ opacity: 0, y: 20 }}
