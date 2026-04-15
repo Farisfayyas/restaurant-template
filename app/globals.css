@@ -49,13 +49,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  /* Force a stable GPU compositing layer for the entire page. Prevents
-     mobile WebKit/Blink from dropping text layers behind background
-     gradients or hardware-accelerated siblings. */
   transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  perspective: 1000px;
 }
 
 /* RTL support */

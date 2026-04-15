@@ -62,12 +62,6 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={isRtl ? "rtl" : "ltr"} className="h-full">
-      {/* Raw script runs before React hydration. If Next.js fails to hydrate
-          cleanly on mobile (e.g. a loader sets opacity:0 on the root and
-          never removes it), this ensures the document root stays visible. */}
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.style.opacity='1';" }} />
-      </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider messages={messages}>
           <Navbar />
