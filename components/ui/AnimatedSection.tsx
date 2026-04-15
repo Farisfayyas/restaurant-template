@@ -32,11 +32,16 @@ export default function AnimatedSection({
   // without waiting for IntersectionObserver, which can misfire on mobile).
   const shouldShow = isMobile || isInView;
 
+  // opacity:0.01 instead of 0 — some mobile browsers (WebKit/Blink) skip
+  // painting elements with opacity:0 entirely as a memory optimisation,
+  // removing them from the GPU render pipeline so they never appear even
+  // after the animation fires. 0.01 is visually identical but forces the
+  // browser to keep a layer allocated for the element from the first paint.
   const initialMap = {
-    up:    { opacity: 0, y: 40 },
-    left:  { opacity: 0, x: -40 },
-    right: { opacity: 0, x: 40 },
-    none:  { opacity: 0 },
+    up:    { opacity: 0.01, y: 40 },
+    left:  { opacity: 0.01, x: -40 },
+    right: { opacity: 0.01, x: 40 },
+    none:  { opacity: 0.01 },
   };
 
   const animateMap = {

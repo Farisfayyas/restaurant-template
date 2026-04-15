@@ -49,9 +49,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  /* Force GPU compositing layer — prevents mobile WebKit bug where text
-     layers aren't painted when the page uses hardware-accelerated elements */
+  /* Force a stable GPU compositing layer for the entire page. Prevents
+     mobile WebKit/Blink from dropping text layers behind background
+     gradients or hardware-accelerated siblings. */
   transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 /* RTL support */
@@ -326,5 +330,20 @@ h1, h2, h3, h4, h5, h6 {
      inline style is still reporting opacity (meaning it hasn't resolved yet) */
   .animated-section[style*="opacity"] {
     animation: forceShow 0.01s ease forwards 1.5s;
+  }
+}
+
+/* ─── Mobile backdrop-filter disable ───────────────────── */
+/* backdrop-filter/backdrop-blur creates a new GPU compositing layer on
+   mobile WebKit/Blink. When multiple blur layers stack, the browser
+   frequently drops child text layers entirely — text becomes invisible
+   even though it is selectable. Disabling blur on mobile eliminates
+   this compositing conflict. Elements use their bg-white/* opacity
+   instead, which looks fine without blur. */
+@media (max-width: 767px) {
+  .glass-nav {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(250, 247, 242, 0.97);
   }
 }
