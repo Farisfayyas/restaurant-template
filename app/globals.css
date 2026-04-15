@@ -303,10 +303,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ─── Mobile animation fail-safe ───────────────────────── */
-/* If the IntersectionObserver fails to fire on mobile and JS leaves
-   elements at opacity:0, this CSS forces them visible after a 2s grace
-   period — long enough for normal animations to complete first.
-   CSS animations override Framer Motion's inline opacity/transform. */
+/* Dead-man's switch: if JS/IntersectionObserver leaves an AnimatedSection
+   stuck at opacity:0 on mobile, this CSS forces it visible after 1.5s.
+   JS animations finish in ~0.7s, so healthy renders are unaffected.
+   CSS animation values override Framer Motion's inline opacity/transform
+   in the cascade (animation origin > author origin, per CSS spec). */
 @media (max-width: 767px) {
   @keyframes forceShow {
     to {
@@ -316,7 +317,14 @@ h1, h2, h3, h4, h5, h6 {
     }
   }
 
+  /* Primary target: our AnimatedSection wrapper class */
   .animated-section {
-    animation: forceShow 0.01s ease forwards 2s;
+    animation: forceShow 0.01s ease forwards 1.5s;
+  }
+
+  /* Belt-and-suspenders: also catch any animated-section whose Framer Motion
+     inline style is still reporting opacity (meaning it hasn't resolved yet) */
+  .animated-section[style*="opacity"] {
+    animation: forceShow 0.01s ease forwards 1.5s;
   }
 }

@@ -23,7 +23,14 @@ export default function AnimatedSection({
     setIsMobile(window.innerWidth < 768);
   }, []);
 
-  const isInView = useInView(ref, { once: true, margin: isMobile ? "100px" : "0px" });
+  // 200px margin triggers the observer before the element fully enters the
+  // viewport — helpful on desktop. On mobile we bypass isInView entirely.
+  const isInView = useInView(ref, { once: true, margin: "200px" });
+
+  // On mobile: show immediately after mount (isMobile flips to true in the
+  // first useEffect, triggering Framer Motion to animate to the visible state
+  // without waiting for IntersectionObserver, which can misfire on mobile).
+  const shouldShow = isMobile || isInView;
 
   const initialMap = {
     up:    { opacity: 0, y: 40 },
@@ -44,7 +51,7 @@ export default function AnimatedSection({
       ref={ref}
       className={`animated-section${className ? ` ${className}` : ""}`}
       initial={initialMap[direction]}
-      animate={isInView ? animateMap[direction] : initialMap[direction]}
+      animate={shouldShow ? animateMap[direction] : initialMap[direction]}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
