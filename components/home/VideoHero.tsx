@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import OpenStatusBadge from "./OpenStatusBadge";
 import restaurant from "@/config/restaurant.config";
@@ -16,45 +17,73 @@ interface VideoHeroProps {
 
 export default function VideoHero({ locale, bookLabel, menuLabel, scrollLabel }: VideoHeroProps) {
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const taglineRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-  const badgeRef = useRef<HTMLDivElement>(null);
+  const taglineRef  = useRef<HTMLParagraphElement>(null);
+  const ctaRef      = useRef<HTMLDivElement>(null);
+  const badgeRef    = useRef<HTMLDivElement>(null);
+  const sectionRef  = useRef<HTMLElement>(null);
 
-  const name = locale === "ar" ? restaurant.nameAr : restaurant.name;
+  // Scoped to this hero section: progress 0→1 as user scrolls hero out of view
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const videoScale     = useTransform(scrollYProgress, [0, 1], [1, 1.18]);
+  const videoY         = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  const name    = locale === "ar" ? restaurant.nameAr    : restaurant.name;
   const tagline = locale === "ar" ? restaurant.taglineAr : restaurant.tagline;
 
   useEffect(() => {
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.from(badgeRef.current, { opacity: 0, y: -12, duration: 0.5, delay: 0.3 })
-        .from(headlineRef.current, { opacity: 0, y: 30, duration: 0.9 }, "-=0.2")
-        .from(taglineRef.current, { opacity: 0, y: 20, duration: 0.7 }, "-=0.6")
-        .from(ctaRef.current, { opacity: 0, y: 20, duration: 0.6 }, "-=0.5");
+      tl.from(badgeRef.current,    { opacity: 0, y: -12, duration: 0.5, delay: 0.3 })
+        .from(headlineRef.current, { opacity: 0, y: 30,  duration: 0.9 }, "-=0.2")
+        .from(taglineRef.current,  { opacity: 0, y: 20,  duration: 0.7 }, "-=0.6")
+        .from(ctaRef.current,      { opacity: 0, y: 20,  duration: 0.6 }, "-=0.5");
     });
     return () => mm.revert();
   }, []);
 
   return (
-    <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
-      {/* Video background */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover"
-        src={restaurant.heroVideo}
-        poster={restaurant.heroFallbackImage}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        aria-hidden="true"
-      />
+    <section
+      ref={sectionRef}
+      className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-[#2A1F1A]"
+    >
+      {/* Background — parallax zoom on scroll (z-0) */}
+      <motion.div
+        className="absolute inset-0 w-full h-full z-0"
+        style={{ scale: videoScale, y: videoY }}
+      >
+        {/* Fallback image always visible; video plays on top when loaded */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${restaurant.heroFallbackImage})` }}
+          aria-hidden="true"
+        />
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src={restaurant.heroVideo}
+          poster={restaurant.heroFallbackImage}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        />
+      </motion.div>
 
-      {/* Overlay */}
-      <div className="hero-overlay absolute inset-0" aria-hidden="true" />
+      {/* Overlay (z-[1] — above background, below content) */}
+      <div className="hero-overlay absolute inset-0 z-[1]" aria-hidden="true" />
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-5 max-w-4xl mx-auto">
+      {/* Content — fades out as user scrolls (z-10 — above everything) */}
+      <motion.div
+        className="relative z-10 text-center px-5 max-w-4xl mx-auto"
+        style={{ opacity: contentOpacity }}
+      >
         <div ref={badgeRef}>
           <OpenStatusBadge locale={locale} />
         </div>
@@ -83,7 +112,7 @@ export default function VideoHero({ locale, bookLabel, menuLabel, scrollLabel }:
             {menuLabel}
           </Link>
         </div>
-      </div>
+      </motion.div>
 
       {/* Scroll cue */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50 animate-bounce">

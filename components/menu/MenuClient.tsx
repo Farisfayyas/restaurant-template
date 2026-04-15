@@ -49,9 +49,9 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
   return (
     <div>
       {/* Category tabs */}
-      <div className="sticky top-16 md:top-20 z-20 bg-[var(--color-bg)] border-b border-[var(--color-border)]">
+      <div className="sticky top-16 md:top-20 z-20 bg-[var(--color-bg)]">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
-          <div className="category-tabs flex overflow-x-auto gap-1 py-3">
+          <div className="category-tabs flex overflow-x-auto gap-8 md:gap-12 md:justify-center border-b border-[var(--color-border)]">
             {categories.map((cat) => {
               const label = locale === "ar" ? cat.categoryAr : cat.category;
               const isActive = cat.id === activeCategory;
@@ -59,10 +59,10 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`shrink-0 px-5 py-2 text-xs font-semibold tracking-widest uppercase transition-all cursor-pointer rounded-full ${
+                  className={`shrink-0 font-display px-2 py-5 text-base md:text-lg tracking-wide transition-all cursor-pointer border-b-2 -mb-px whitespace-nowrap ${
                     isActive
-                      ? "bg-[var(--color-accent)] text-white shadow-md"
-                      : "text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-surface)]"
+                      ? "border-[var(--color-accent)] text-[var(--color-text)] font-semibold"
+                      : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-text)]"
                   }`}
                 >
                   {label}
