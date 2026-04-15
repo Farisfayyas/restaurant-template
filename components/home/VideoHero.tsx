@@ -116,7 +116,7 @@ export default function VideoHero({ locale, bookLabel, menuLabel, scrollLabel }:
 
       {/* Scroll cue */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50 animate-bounce">
-        <span className="text-xs tracking-widest uppercase font-medium hidden sm:block">{scrollLabel}</span>
+        <span className="text-xs tracking-widest uppercase font-medium block">{scrollLabel}</span>
         <ArrowDown size={18} strokeWidth={1.5} />
       </div>
     </section>

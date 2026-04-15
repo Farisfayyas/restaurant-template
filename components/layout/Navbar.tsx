@@ -79,18 +79,18 @@ export default function Navbar() {
             />
             {/* Divider */}
             <span
-              className={`hidden md:block w-px h-4 shrink-0 ${isScrolled || menuOpen ? "bg-[var(--color-border)]" : "bg-white/25"}`}
+              className={`block w-px h-4 shrink-0 ${isScrolled || menuOpen ? "bg-[var(--color-border)]" : "bg-white/25"}`}
               aria-hidden="true"
             />
             <a
               href={`tel:${restaurant.phone}`}
               aria-label="Call us"
-              className={`hidden md:flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-colors ${
+              className={`flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-colors ${
                 isScrolled ? "text-[var(--color-text)] hover:text-[var(--color-accent)]" : "text-white/90 hover:text-white"
               }`}
             >
               <Phone size={13} strokeWidth={2.5} />
-              {restaurant.phone}
+              <span className="hidden md:inline">{restaurant.phone}</span>
             </a>
             <span className="hidden lg:block w-2" aria-hidden="true" />
             <Link
