@@ -301,14 +301,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* ─── Mobile text z-index enforcement ──────────────────── */
-/* If an invisible overlay (from a GPU compositing conflict, a stacking
-   context created by transform/filter, or a misplaced absolute element)
-   sits on top of text, the text is selectable but visually hidden.
-   Forcing position:relative + z-index:50 on all text elements pushes them
-   above any such overlays on mobile screens. */
+/* ─── Animated section z-index enforcement ──────────────── */
+/* Targets only Framer Motion wrapper divs (animated-section containers)
+   rather than every text element. Keeps animated content above any GPU
+   compositing overlays without creating hundreds of individual stacking
+   contexts on text nodes, which causes layer explosion and scroll jank. */
 @media (max-width: 768px) {
-  p, h1, h2, h3, h4, h5, h6, span {
+  div[class*="animated-section"] {
     position: relative !important;
     z-index: 50 !important;
   }
