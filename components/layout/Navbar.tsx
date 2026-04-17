@@ -37,7 +37,7 @@ export default function Navbar() {
   return (
     <>
       <header className="sticky top-0 inset-x-0 z-50 glass-nav shadow-sm transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-5 md:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-6 md:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
           {/* Logo */}
           <Link
             href={base}
@@ -62,17 +62,17 @@ export default function Navbar() {
           </nav>
 
           {/* Right actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <LanguageToggle />
             {/* Divider */}
             <span
-              className="block w-px h-4 shrink-0 bg-[var(--color-border)]"
+              className="hidden md:block w-px h-4 shrink-0 bg-[var(--color-border)]"
               aria-hidden="true"
             />
             <a
               href={`tel:${restaurant.phone}`}
               aria-label="Call us"
-              className="flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-colors text-[var(--color-text)] hover:text-[var(--color-accent)]"
+              className="hidden md:flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-colors text-[var(--color-text)] hover:text-[var(--color-accent)]"
             >
               <Phone size={13} strokeWidth={2.5} />
               <span className="hidden md:inline">{restaurant.phone}</span>
@@ -88,7 +88,7 @@ export default function Navbar() {
             <button
               onClick={() => setMenuOpen((o) => !o)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
-              className="lg:hidden p-1 transition-colors text-[var(--color-text)]"
+              className="lg:hidden p-2 shrink-0 transition-colors text-[var(--color-text)]"
             >
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
