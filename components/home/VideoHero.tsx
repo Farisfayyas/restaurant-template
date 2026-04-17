@@ -78,12 +78,15 @@ export default function VideoHero({ locale, bookLabel, menuLabel, scrollLabel }:
 
       {/* hero-overlay removed for diagnostic — checking if it was the touch shield */}
 
-      {/* Content — fades out as user scrolls (z-10 — above everything) */}
+      {/* Content — fades out as user scrolls (z-10 — above everything).
+          pointer-events: none on the wrapper so this div never intercepts
+          taps when contentOpacity reaches 0 on scroll. The CTA div and
+          badge get pointer-events: auto so they remain tappable while visible. */}
       <motion.div
-        className="relative z-10 text-center px-5 max-w-4xl mx-auto"
+        className="relative z-10 text-center px-5 max-w-4xl mx-auto pointer-events-none"
         style={{ opacity: contentOpacity }}
       >
-        <div ref={badgeRef}>
+        <div ref={badgeRef} className="pointer-events-auto">
           <OpenStatusBadge locale={locale} />
         </div>
 
@@ -103,7 +106,7 @@ export default function VideoHero({ locale, bookLabel, menuLabel, scrollLabel }:
           {tagline}
         </p>
 
-        <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4 pointer-events-auto">
           <Link href={`/${locale}/reservations`} className="btn-primary min-w-[180px]">
             {bookLabel}
           </Link>
