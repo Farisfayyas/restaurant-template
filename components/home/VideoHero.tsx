@@ -76,8 +76,7 @@ export default function VideoHero({ locale, bookLabel, menuLabel, scrollLabel }:
         />
       </motion.div>
 
-      {/* Overlay (z-[1] — above background, below content) */}
-      <div className="hero-overlay absolute inset-0 z-[1] pointer-events-none" aria-hidden="true" />
+      {/* hero-overlay removed for diagnostic — checking if it was the touch shield */}
 
       {/* Content — fades out as user scrolls (z-10 — above everything) */}
       <motion.div
