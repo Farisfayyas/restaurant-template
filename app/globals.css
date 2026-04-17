@@ -55,6 +55,7 @@ section {
 html {
   scroll-behavior: smooth;
   /* ↑ overridden to auto on mobile — see mobile media query below */
+  scroll-padding-top: 130px; /* sticky navbar(64px) + category tabs(~59px) + breathing */
   -webkit-tap-highlight-color: transparent;
   /* Declare light-only color scheme — prevents Android Chrome forced-dark-mode
      from auto-inverting text/background colors and making text invisible */
@@ -579,6 +580,9 @@ h1, h2, h3, h4, h5, h6 {
    Disable entirely on mobile as a diagnostic step. */
 @media (max-width: 768px) {
   html { scroll-behavior: auto !important; }
+}
+@media (min-width: 768px) {
+  html { scroll-padding-top: 148px; } /* sticky navbar(80px) + category tabs(~59px) + breathing */
 }
 
 /* ─── Mobile gesture & drag hardening ──────────────────────

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,6 +31,8 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
   const [activeCategory, setActiveCategory] = useState(categories[0]?.id ?? "");
   const [dietaryFilter, setDietaryFilter] = useState<DietaryFilter>("all");
   const [hoveredPairing, setHoveredPairing] = useState<string | null>(null);
+  const tabBarRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const syncFromHash = () => {
@@ -43,6 +45,22 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
     window.addEventListener("hashchange", syncFromHash);
     return () => window.removeEventListener("hashchange", syncFromHash);
   }, [categories]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const el = tabBarRef.current;
+      if (!el) return;
+      const current = window.scrollY;
+      if (current > lastScrollY.current && current > 150) {
+        el.style.transform = "translateY(-100%)";
+      } else {
+        el.style.transform = "translateY(0)";
+      }
+      lastScrollY.current = current;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const currentCategory = categories.find((c) => c.id === activeCategory) ?? categories[0];
 
@@ -62,21 +80,16 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
   return (
     <div>
       {/* Category tabs */}
-      <div className="sticky top-16 md:top-20 z-20 bg-[var(--color-bg)]">
+      <div ref={tabBarRef} className="sticky top-16 md:top-20 z-40 bg-[var(--color-bg)]" style={{ transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)" }}>
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="category-tabs flex overflow-x-auto pb-px gap-8 md:gap-12 md:justify-center border-b border-[var(--color-border)]">
             {categories.map((cat) => {
               const label = locale === "ar" ? cat.categoryAr : cat.category;
-              const isActive = cat.id === activeCategory;
               return (
                 <a
                   key={cat.id}
                   href={`#${cat.id}`}
-                  className={`shrink-0 font-display px-2 py-5 text-base md:text-lg tracking-wide transition-all cursor-pointer border-b-2 -mb-px whitespace-nowrap no-underline ${
-                    isActive
-                      ? "border-[var(--color-accent)] text-[var(--color-text)] font-semibold"
-                      : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-text)]"
-                  }`}
+                  className="shrink-0 font-display px-2 py-5 text-base md:text-lg tracking-wide cursor-pointer whitespace-nowrap no-underline text-[var(--color-text)] opacity-60 hover:opacity-100 transition-opacity"
                 >
                   {label}
                 </a>
@@ -206,8 +219,9 @@ function MenuItemCard({
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-1">
           <h3 className="font-display text-lg leading-tight">{name}</h3>
-          <span className="text-sm font-semibold text-[var(--color-accent)] shrink-0">
-            {labels.aed} {item.price}
+          <span className="shrink-0 text-[var(--color-accent)] flex items-baseline gap-1">
+            <span className="text-[10px] font-light tracking-widest">{labels.aed}</span>
+            <span className="text-base font-bold">{item.price}</span>
           </span>
         </div>
         <p className="text-xs text-[var(--color-muted)] leading-relaxed mb-2 line-clamp-2">{desc}</p>

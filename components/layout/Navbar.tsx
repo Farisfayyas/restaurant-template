@@ -13,7 +13,6 @@ export default function Navbar() {
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const base = `/${locale}`;
@@ -27,12 +26,6 @@ export default function Navbar() {
     { href: `${base}/about`,     label: t("about") },
   ];
 
-  useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   // Close mobile menu on route change
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
@@ -43,17 +36,13 @@ export default function Navbar() {
 
   return (
     <>
-      <header
-        className={`fixed top-0 inset-x-0 z-40 transition-all duration-300 ${
-          isScrolled || menuOpen ? "glass-nav shadow-sm" : "bg-transparent"
-        }`}
-      >
+      <header className="sticky top-0 inset-x-0 z-50 glass-nav shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-5 md:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
           {/* Logo */}
           <Link
             href={base}
             className="font-display text-xl md:text-2xl tracking-wide shrink-0"
-            style={{ color: isScrolled || menuOpen ? "var(--color-text)" : "#fff" }}
+            style={{ color: "var(--color-text)" }}
           >
             {restaurant.name}
           </Link>
@@ -65,7 +54,7 @@ export default function Navbar() {
                 key={href}
                 href={href}
                 className={`nav-link ${isActive(href) ? "active" : ""}`}
-                style={{ color: isScrolled ? "var(--color-text)" : "rgba(255,255,255,0.9)" }}
+                style={{ color: "var(--color-text)" }}
               >
                 {label}
               </Link>
@@ -74,20 +63,16 @@ export default function Navbar() {
 
           {/* Right actions */}
           <div className="flex items-center gap-3">
-            <LanguageToggle
-              className={isScrolled || menuOpen ? "" : "text-white/90 hover:text-white"}
-            />
+            <LanguageToggle />
             {/* Divider */}
             <span
-              className={`block w-px h-4 shrink-0 ${isScrolled || menuOpen ? "bg-[var(--color-border)]" : "bg-white/25"}`}
+              className="block w-px h-4 shrink-0 bg-[var(--color-border)]"
               aria-hidden="true"
             />
             <a
               href={`tel:${restaurant.phone}`}
               aria-label="Call us"
-              className={`flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-colors ${
-                isScrolled ? "text-[var(--color-text)] hover:text-[var(--color-accent)]" : "text-white/90 hover:text-white"
-              }`}
+              className="flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase transition-colors text-[var(--color-text)] hover:text-[var(--color-accent)]"
             >
               <Phone size={13} strokeWidth={2.5} />
               <span className="hidden md:inline">{restaurant.phone}</span>
@@ -103,9 +88,7 @@ export default function Navbar() {
             <button
               onClick={() => setMenuOpen((o) => !o)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
-              className={`lg:hidden p-1 transition-colors ${
-                isScrolled || menuOpen ? "text-[var(--color-text)]" : "text-white"
-              }`}
+              className="lg:hidden p-1 transition-colors text-[var(--color-text)]"
             >
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
