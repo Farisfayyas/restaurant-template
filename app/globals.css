@@ -35,6 +35,7 @@ html, body {
 
 html {
   scroll-behavior: smooth;
+  /* ↑ overridden to auto on mobile — see mobile media query below */
   -webkit-tap-highlight-color: transparent;
   /* Declare light-only color scheme — prevents Android Chrome forced-dark-mode
      from auto-inverting text/background colors and making text invisible */
@@ -551,3 +552,20 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 767px) {
   [data-theme="rose"] .glass-nav { background: rgba(251, 247, 245, 0.97); }
 }
+
+/* ─── Mobile smooth-scroll disable ─────────────────────────
+   scroll-behavior: smooth (and any Lenis/native smooth-scroll)
+   is known to intercept touchstart/touchmove handlers on some
+   mobile WebKit builds, causing taps to be swallowed.
+   Disable entirely on mobile as a diagnostic step. */
+@media (max-width: 768px) {
+  html { scroll-behavior: auto !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DIAGNOSTIC — RED OUTLINE LAYER VISUALIZER
+   Every rendered box gets a 1px red border. Any unexpected
+   box sitting over your buttons is the invisible shield.
+   REMOVE THIS BLOCK after the culprit is identified.
+   ═══════════════════════════════════════════════════════════ */
+* { outline: 1px solid red !important; }
