@@ -34,18 +34,19 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
   const tabBarRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
 
+  // Sync active tab from URL hash on load and hash changes
   useEffect(() => {
     const syncFromHash = () => {
       const hash = window.location.hash.replace("#", "");
       const match = categories.find((c) => c.id === hash);
       if (match) setActiveCategory(match.id);
     };
-
     syncFromHash();
     window.addEventListener("hashchange", syncFromHash);
     return () => window.removeEventListener("hashchange", syncFromHash);
   }, [categories]);
 
+  // Smart reveal — hides tab bar on scroll down, shows on scroll up
   useEffect(() => {
     const onScroll = () => {
       const el = tabBarRef.current;
@@ -80,19 +81,28 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
   return (
     <div>
       {/* Category tabs */}
-      <div ref={tabBarRef} className="sticky top-16 md:top-20 z-40 bg-[var(--color-bg)]" style={{ transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)" }}>
+      <div
+        ref={tabBarRef}
+        className="sticky top-16 md:top-20 z-40 bg-[var(--color-bg)]"
+        style={{ transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)" }}
+      >
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="category-tabs flex overflow-x-auto pb-px gap-8 md:gap-12 md:justify-center border-b border-[var(--color-border)]">
             {categories.map((cat) => {
               const label = locale === "ar" ? cat.categoryAr : cat.category;
+              const isActive = cat.id === activeCategory;
               return (
-                <a
+                <button
                   key={cat.id}
-                  href={`#${cat.id}`}
-                  className="shrink-0 font-display px-2 py-5 text-base md:text-lg tracking-wide cursor-pointer whitespace-nowrap no-underline text-[var(--color-text)] opacity-60 hover:opacity-100 transition-opacity"
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`shrink-0 font-display px-2 py-5 text-base md:text-lg tracking-wide cursor-pointer whitespace-nowrap border-b-2 -mb-px transition-[border-color,opacity] duration-300 text-[var(--color-text)] ${
+                    isActive
+                      ? "border-[var(--color-accent)] opacity-100"
+                      : "border-transparent opacity-60 hover:opacity-100"
+                  }`}
                 >
                   {label}
-                </a>
+                </button>
               );
             })}
           </div>
@@ -117,19 +127,18 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
           ))}
         </div>
 
-        {/* Category heading + items */}
+        {/* Active category items only */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeCategory}
-            initial={{ opacity: 1, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
           >
             <h2 className="font-display text-3xl md:text-4xl mb-8">
               {locale === "ar" ? currentCategory?.categoryAr : currentCategory?.category}
             </h2>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {filteredItems.map((item) => (
                 <MenuItemCard
