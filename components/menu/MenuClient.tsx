@@ -37,6 +37,23 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
     setIsMobile(window.innerWidth < 768);
   }, []);
 
+  // Hash-based navigation: syncs the active category with the URL hash.
+  // This bypasses React's synthetic event system entirely — the hashchange
+  // event is native and fires even when onClick state updates silently fail
+  // (a known mobile WebKit / hydration-mismatch symptom). Also reads the
+  // hash on initial mount so a direct link like /menu#mains works.
+  useEffect(() => {
+    const syncFromHash = () => {
+      const hash = window.location.hash.replace("#", "");
+      const match = categories.find((c) => c.id === hash);
+      if (match) setActiveCategory(match.id);
+    };
+
+    syncFromHash(); // force-render correct category if URL already has a hash
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
+  }, [categories]);
+
   const currentCategory = categories.find((c) => c.id === activeCategory) ?? categories[0];
 
   const filteredItems = currentCategory?.items.filter((item) => {
@@ -85,8 +102,8 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
               return (
                 <a
                   key={cat.id}
-                  href={`#cat-${cat.id}`}
-                  onClick={(e) => { e.preventDefault(); setActiveCategory(cat.id); }}
+                  href={`#${cat.id}`}
+                  onClick={() => setActiveCategory(cat.id)}
                   className={`shrink-0 font-display px-2 py-5 text-base md:text-lg tracking-wide transition-all cursor-pointer border-b-2 -mb-px whitespace-nowrap no-underline ${
                     isActive
                       ? "border-[var(--color-accent)] text-[var(--color-text)] font-semibold"

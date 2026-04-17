@@ -36,6 +36,12 @@ export default function VideoHero({ locale, bookLabel, menuLabel, scrollLabel }:
   const tagline = locale === "ar" ? restaurant.taglineAr : restaurant.tagline;
 
   useEffect(() => {
+    // Skip GSAP entirely on mobile. gsap.from() sets opacity:0 as an inline
+    // style and animates to the natural value. If GSAP fails mid-animation on
+    // mobile (e.g. due to a compositing or timing issue), those inline styles
+    // stick and the headline/CTAs become permanently invisible.
+    if (window.innerWidth < 768) return;
+
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
