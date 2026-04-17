@@ -31,17 +31,7 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
   const [activeCategory, setActiveCategory] = useState(categories[0]?.id ?? "");
   const [dietaryFilter, setDietaryFilter] = useState<DietaryFilter>("all");
   const [hoveredPairing, setHoveredPairing] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
-
-  // Hash-based navigation: syncs the active category with the URL hash.
-  // This bypasses React's synthetic event system entirely — the hashchange
-  // event is native and fires even when onClick state updates silently fail
-  // (a known mobile WebKit / hydration-mismatch symptom). Also reads the
-  // hash on initial mount so a direct link like /menu#mains works.
   useEffect(() => {
     const syncFromHash = () => {
       const hash = window.location.hash.replace("#", "");
@@ -49,53 +39,32 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
       if (match) setActiveCategory(match.id);
     };
 
-    syncFromHash(); // force-render correct category if URL already has a hash
+    syncFromHash();
     window.addEventListener("hashchange", syncFromHash);
     return () => window.removeEventListener("hashchange", syncFromHash);
   }, [categories]);
 
   const currentCategory = categories.find((c) => c.id === activeCategory) ?? categories[0];
 
-  const filteredItems = currentCategory?.items.filter((item) => {
-    if (dietaryFilter === "all") return true;
-    return item.dietary.includes(dietaryFilter as DietaryTag);
-  }) ?? [];
+  const filteredItems =
+    currentCategory?.items.filter((item) => {
+      if (dietaryFilter === "all") return true;
+      return item.dietary.includes(dietaryFilter as DietaryTag);
+    }) ?? [];
 
   const dietaryFilters: { key: DietaryFilter; label: string }[] = [
-    { key: "all",        label: labels.filterAll },
-    { key: "vegan",      label: labels.filterVegan },
-    { key: "spicy",      label: labels.filterSpicy },
+    { key: "all", label: labels.filterAll },
+    { key: "vegan", label: labels.filterVegan },
+    { key: "spicy", label: labels.filterSpicy },
     { key: "glutenFree", label: labels.filterGlutenFree },
   ];
 
-  const itemGrid = (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-      {filteredItems.map((item) => (
-        <MenuItemCard
-          key={item.id}
-          item={item}
-          locale={locale}
-          dietaryLabels={dietaryLabels}
-          labels={labels}
-          isHoveredPairing={hoveredPairing === item.id}
-          onHoverPairing={(id) => setHoveredPairing(id)}
-          isMobile={isMobile}
-        />
-      ))}
-    </div>
-  );
-
   return (
     <div>
-      {/* Category tabs.
-          overflow-x-auto implicitly clips overflow-y, which trims the -mb-px
-          on buttons and shrinks the touch target. pb-px on the scroll container
-          gives that 1px back so the active underline and full tap area are both
-          intact. The sticky wrapper gets a high z-index so it always sits above
-          page sections (which are z-index:1 from the stacking-context cleanup). */}
-      <div className="sticky top-16 md:top-20 z-[99999] bg-[var(--color-bg)]">
+      {/* Category tabs */}
+      <div className="sticky top-16 md:top-20 z-20 bg-[var(--color-bg)]">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
-          <div className="menu-tabs-container category-tabs flex overflow-x-auto pb-px gap-8 md:gap-12 md:justify-center border-b border-[var(--color-border)]">
+          <div className="category-tabs flex overflow-x-auto pb-px gap-8 md:gap-12 md:justify-center border-b border-[var(--color-border)]">
             {categories.map((cat) => {
               const label = locale === "ar" ? cat.categoryAr : cat.category;
               const isActive = cat.id === activeCategory;
@@ -103,7 +72,6 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
                 <a
                   key={cat.id}
                   href={`#${cat.id}`}
-                  onClick={() => setActiveCategory(cat.id)}
                   className={`shrink-0 font-display px-2 py-5 text-base md:text-lg tracking-wide transition-all cursor-pointer border-b-2 -mb-px whitespace-nowrap no-underline ${
                     isActive
                       ? "border-[var(--color-accent)] text-[var(--color-text)] font-semibold"
@@ -122,47 +90,48 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
         {/* Dietary filters */}
         <div className="flex flex-wrap gap-2 mb-8">
           {dietaryFilters.map(({ key, label }) => (
-            <a
+            <button
               key={key}
-              href={`#filter-${key}`}
-              onClick={(e) => { e.preventDefault(); setDietaryFilter(key); }}
-              className={`px-4 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer no-underline ${
+              onClick={() => setDietaryFilter(key)}
+              className={`px-4 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer ${
                 dietaryFilter === key
                   ? "bg-[var(--color-text)] text-white border-[var(--color-text)]"
                   : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-text)] hover:text-[var(--color-text)]"
               }`}
             >
               {label}
-            </a>
+            </button>
           ))}
         </div>
 
-        {/* Category heading + items grid */}
-        {isMobile ? (
-          // Mobile: plain div — no Framer Motion involvement at all
-          <div key={activeCategory}>
+        {/* Category heading + items */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 1, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+          >
             <h2 className="font-display text-3xl md:text-4xl mb-8">
               {locale === "ar" ? currentCategory?.categoryAr : currentCategory?.category}
             </h2>
-            {itemGrid}
-          </div>
-        ) : (
-          // Desktop: animated transition between categories
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeCategory}
-              initial={{ opacity: 1, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25 }}
-            >
-              <h2 className="font-display text-3xl md:text-4xl mb-8">
-                {locale === "ar" ? currentCategory?.categoryAr : currentCategory?.category}
-              </h2>
-              {itemGrid}
-            </motion.div>
-          </AnimatePresence>
-        )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {filteredItems.map((item) => (
+                <MenuItemCard
+                  key={item.id}
+                  item={item}
+                  locale={locale}
+                  dietaryLabels={dietaryLabels}
+                  labels={labels}
+                  isHoveredPairing={hoveredPairing === item.id}
+                  onHoverPairing={(id) => setHoveredPairing(id)}
+                />
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Order CTA */}
         <div className="mt-14 text-center p-10 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl">
@@ -175,7 +144,9 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
               : "Order directly via WhatsApp or book your table in advance."}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href={`/${locale}/order`} className="btn-primary">{labels.orderNow}</Link>
+            <Link href={`/${locale}/order`} className="btn-primary">
+              {labels.orderNow}
+            </Link>
             <Link href={`/${locale}/reservations`} className="btn-dark">
               {locale === "ar" ? "احجز طاولة" : "Book a Table"}
             </Link>
@@ -193,7 +164,6 @@ function MenuItemCard({
   labels,
   isHoveredPairing,
   onHoverPairing,
-  isMobile,
 }: {
   item: MenuItem;
   locale: string;
@@ -201,13 +171,21 @@ function MenuItemCard({
   labels: MenuClientProps["labels"];
   isHoveredPairing: boolean;
   onHoverPairing: (id: string | null) => void;
-  isMobile: boolean;
 }) {
   const name = locale === "ar" ? item.nameAr : item.name;
   const desc = locale === "ar" ? item.descriptionAr : item.description;
 
-  const cardContent = (
-    <>
+  return (
+    <motion.div
+      className="group relative flex gap-4 p-5 bg-white/70 md:backdrop-blur-sm border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:shadow-lg transition-all rounded-2xl"
+      style={{ boxShadow: "0 2px 12px rgba(28,28,28,0.06)" }}
+      layout
+      initial={{ opacity: 1, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      onMouseEnter={() => item.pairsWith.length > 0 && onHoverPairing(item.id)}
+      onMouseLeave={() => onHoverPairing(null)}
+    >
       {/* Image */}
       <div className="relative w-24 h-24 shrink-0 overflow-hidden bg-[var(--color-surface-2)] rounded-xl">
         <Image
@@ -241,37 +219,8 @@ function MenuItemCard({
           </div>
         )}
       </div>
-    </>
-  );
 
-  // Mobile: plain div, no animation library, no hover-pairing tooltip
-  if (isMobile) {
-    return (
-      <div
-        className="group relative flex gap-4 p-5 bg-white/70 border border-[var(--color-border)] transition-all rounded-2xl"
-        style={{ boxShadow: "0 2px 12px rgba(28,28,28,0.06)" }}
-      >
-        {cardContent}
-      </div>
-    );
-  }
-
-  // Desktop: Framer Motion card with slide-in. opacity starts at 1 — only
-  // the y position animates, so the card is never invisible if animate misfires.
-  return (
-    <motion.div
-      className="group relative flex gap-4 p-5 bg-white/70 md:backdrop-blur-sm border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:shadow-lg transition-all rounded-2xl"
-      style={{ boxShadow: "0 2px 12px rgba(28,28,28,0.06)" }}
-      layout
-      initial={{ opacity: 1, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      onMouseEnter={() => item.pairsWith.length > 0 && onHoverPairing(item.id)}
-      onMouseLeave={() => onHoverPairing(null)}
-    >
-      {cardContent}
-
-      {/* Pairing tooltip — desktop only */}
+      {/* Pairing tooltip */}
       <AnimatePresence>
         {isHoveredPairing && item.pairsWith.length > 0 && (
           <motion.div
