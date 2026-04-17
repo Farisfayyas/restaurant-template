@@ -104,7 +104,7 @@ export default async function LocaleLayout({
               telephone: restaurant.phone,
               email: restaurant.email,
               servesCuisine: restaurant.cuisine,
-              url: `https://example.com`,
+              url: `https://faris-restaurant-template.vercel.app`,
             }),
           }}
         />
