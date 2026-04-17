@@ -44,19 +44,20 @@ export default function GalleryClient({ locale, images, labels }: GalleryClientP
   return (
     <div className="max-w-7xl mx-auto px-5 md:px-8 py-12">
       {/* Filter tabs */}
-      <div className="flex flex-wrap gap-2 mb-10 justify-center">
+      <div className="gallery-filters flex flex-wrap gap-2 mb-10 justify-center">
         {FILTERS.map(({ key, labelKey }) => (
-          <button
+          <a
             key={key}
-            onClick={() => setFilter(key)}
-            className={`px-5 py-2 text-xs font-semibold tracking-widest uppercase transition-all cursor-pointer ${
+            href={`#gallery-${key}`}
+            onClick={(e) => { e.preventDefault(); setFilter(key); }}
+            className={`px-5 py-2 text-xs font-semibold tracking-widest uppercase transition-all cursor-pointer no-underline ${
               filter === key
                 ? "bg-[var(--color-text)] text-white"
                 : "border border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-text)] hover:text-[var(--color-text)]"
             }`}
           >
             {labels[labelKey]}
-          </button>
+          </a>
         ))}
       </div>
 
