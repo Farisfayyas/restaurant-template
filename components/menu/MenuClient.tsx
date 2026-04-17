@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,6 +31,11 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
   const [activeCategory, setActiveCategory] = useState(categories[0]?.id ?? "");
   const [dietaryFilter, setDietaryFilter] = useState<DietaryFilter>("all");
   const [hoveredPairing, setHoveredPairing] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const currentCategory = categories.find((c) => c.id === activeCategory) ?? categories[0];
 
@@ -45,6 +50,23 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
     { key: "spicy",      label: labels.filterSpicy },
     { key: "glutenFree", label: labels.filterGlutenFree },
   ];
+
+  const itemGrid = (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {filteredItems.map((item) => (
+        <MenuItemCard
+          key={item.id}
+          item={item}
+          locale={locale}
+          dietaryLabels={dietaryLabels}
+          labels={labels}
+          isHoveredPairing={hoveredPairing === item.id}
+          onHoverPairing={(id) => setHoveredPairing(id)}
+          isMobile={isMobile}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <div>
@@ -91,35 +113,32 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
           ))}
         </div>
 
-        {/* Category heading */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-          >
+        {/* Category heading + items grid */}
+        {isMobile ? (
+          // Mobile: plain div — no Framer Motion involvement at all
+          <div key={activeCategory}>
             <h2 className="font-display text-3xl md:text-4xl mb-8">
               {locale === "ar" ? currentCategory?.categoryAr : currentCategory?.category}
             </h2>
-
-            {/* Items grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {filteredItems.map((item) => (
-                <MenuItemCard
-                  key={item.id}
-                  item={item}
-                  locale={locale}
-                  dietaryLabels={dietaryLabels}
-                  labels={labels}
-                  isHoveredPairing={hoveredPairing === item.id}
-                  onHoverPairing={(id) => setHoveredPairing(id)}
-                />
-              ))}
-            </div>
-          </motion.div>
-        </AnimatePresence>
+            {itemGrid}
+          </div>
+        ) : (
+          // Desktop: animated transition between categories
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 1, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+            >
+              <h2 className="font-display text-3xl md:text-4xl mb-8">
+                {locale === "ar" ? currentCategory?.categoryAr : currentCategory?.category}
+              </h2>
+              {itemGrid}
+            </motion.div>
+          </AnimatePresence>
+        )}
 
         {/* Order CTA */}
         <div className="mt-14 text-center p-10 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl">
@@ -150,6 +169,7 @@ function MenuItemCard({
   labels,
   isHoveredPairing,
   onHoverPairing,
+  isMobile,
 }: {
   item: MenuItem;
   locale: string;
@@ -157,21 +177,13 @@ function MenuItemCard({
   labels: MenuClientProps["labels"];
   isHoveredPairing: boolean;
   onHoverPairing: (id: string | null) => void;
+  isMobile: boolean;
 }) {
   const name = locale === "ar" ? item.nameAr : item.name;
   const desc = locale === "ar" ? item.descriptionAr : item.description;
 
-  return (
-    <motion.div
-      className="group relative flex gap-4 p-5 bg-white/70 md:backdrop-blur-sm border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:shadow-lg transition-all rounded-2xl"
-      style={{ boxShadow: "0 2px 12px rgba(28,28,28,0.06)" }}
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      onMouseEnter={() => item.pairsWith.length > 0 && onHoverPairing(item.id)}
-      onMouseLeave={() => onHoverPairing(null)}
-    >
+  const cardContent = (
+    <>
       {/* Image */}
       <div className="relative w-24 h-24 shrink-0 overflow-hidden bg-[var(--color-surface-2)] rounded-xl">
         <Image
@@ -205,8 +217,37 @@ function MenuItemCard({
           </div>
         )}
       </div>
+    </>
+  );
 
-      {/* Pairing tooltip */}
+  // Mobile: plain div, no animation library, no hover-pairing tooltip
+  if (isMobile) {
+    return (
+      <div
+        className="group relative flex gap-4 p-5 bg-white/70 border border-[var(--color-border)] transition-all rounded-2xl"
+        style={{ boxShadow: "0 2px 12px rgba(28,28,28,0.06)" }}
+      >
+        {cardContent}
+      </div>
+    );
+  }
+
+  // Desktop: Framer Motion card with slide-in. opacity starts at 1 — only
+  // the y position animates, so the card is never invisible if animate misfires.
+  return (
+    <motion.div
+      className="group relative flex gap-4 p-5 bg-white/70 md:backdrop-blur-sm border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:shadow-lg transition-all rounded-2xl"
+      style={{ boxShadow: "0 2px 12px rgba(28,28,28,0.06)" }}
+      layout
+      initial={{ opacity: 1, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      onMouseEnter={() => item.pairsWith.length > 0 && onHoverPairing(item.id)}
+      onMouseLeave={() => onHoverPairing(null)}
+    >
+      {cardContent}
+
+      {/* Pairing tooltip — desktop only */}
       <AnimatePresence>
         {isHoveredPairing && item.pairsWith.length > 0 && (
           <motion.div
