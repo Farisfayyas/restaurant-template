@@ -70,10 +70,15 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
 
   return (
     <div>
-      {/* Category tabs */}
-      <div className="sticky top-16 md:top-20 z-20 bg-[var(--color-bg)]">
+      {/* Category tabs.
+          overflow-x-auto implicitly clips overflow-y, which trims the -mb-px
+          on buttons and shrinks the touch target. pb-px on the scroll container
+          gives that 1px back so the active underline and full tap area are both
+          intact. The sticky wrapper gets a high z-index so it always sits above
+          page sections (which are z-index:1 from the stacking-context cleanup). */}
+      <div className="sticky top-16 md:top-20 z-[99999] bg-[var(--color-bg)]">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
-          <div className="category-tabs flex overflow-x-auto gap-8 md:gap-12 md:justify-center border-b border-[var(--color-border)]">
+          <div className="category-tabs flex overflow-x-auto pb-px gap-8 md:gap-12 md:justify-center border-b border-[var(--color-border)]">
             {categories.map((cat) => {
               const label = locale === "ar" ? cat.categoryAr : cat.category;
               const isActive = cat.id === activeCategory;

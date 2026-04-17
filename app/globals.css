@@ -33,6 +33,25 @@ html, body {
 /* ─── Base ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
+/* ─── Stacking context cleanup ─────────────────────────────
+   Isolate the main content tree from the root stacking context.
+   This prevents fixed/absolute overlays outside <main> (navbars,
+   FABs, sticky bars) from inadvertently sitting inside the same
+   stacking context as page content and intercepting taps.
+   header/nav/mobile-menu get explicit high z-index so they stay
+   above page sections. Sections get z-index:1 + position:relative
+   so their children form predictable local stacking contexts. */
+main, #__next, .main-wrapper {
+  isolation: isolate;
+}
+header, nav, .mobile-menu {
+  z-index: 99999 !important;
+}
+section {
+  position: relative;
+  z-index: 1;
+}
+
 html {
   scroll-behavior: smooth;
   /* ↑ overridden to auto on mobile — see mobile media query below */
@@ -562,10 +581,3 @@ h1, h2, h3, h4, h5, h6 {
   html { scroll-behavior: auto !important; }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   DIAGNOSTIC — RED OUTLINE LAYER VISUALIZER
-   Every rendered box gets a 1px red border. Any unexpected
-   box sitting over your buttons is the invisible shield.
-   REMOVE THIS BLOCK after the culprit is identified.
-   ═══════════════════════════════════════════════════════════ */
-* { outline: 1px solid red !important; }
