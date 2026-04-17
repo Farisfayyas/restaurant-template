@@ -10,6 +10,19 @@ import MobileStickyBar from "@/components/layout/MobileStickyBar";
 import WhatsAppFAB from "@/components/ui/WhatsAppFAB";
 import restaurant from "@/config/restaurant.config";
 
+// ─── Active theme ───────────────────────────────────────────
+// Change this one value to switch the entire site palette.
+// Options: "ember" | "obsidian" | "sage" | "alabaster" | "rose"
+const ACTIVE_THEME = "ember";
+
+const THEME_BG: Record<string, string> = {
+  ember:     "#FAF7F2",
+  obsidian:  "#141414",
+  sage:      "#F5F2EC",
+  alabaster: "#FAFAFA",
+  rose:      "#FBF7F5",
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -41,7 +54,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#FAF7F2",
+  themeColor: THEME_BG[ACTIVE_THEME] ?? "#FAF7F2",
 };
 
 export default async function LocaleLayout({
@@ -61,7 +74,7 @@ export default async function LocaleLayout({
   const isRtl = locale === "ar";
 
   return (
-    <html lang={locale} dir={isRtl ? "rtl" : "ltr"} className="h-full">
+    <html lang={locale} dir={isRtl ? "rtl" : "ltr"} className="h-full" data-theme={ACTIVE_THEME}>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           <Navbar />
