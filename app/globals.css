@@ -581,3 +581,23 @@ h1, h2, h3, h4, h5, h6 {
   html { scroll-behavior: auto !important; }
 }
 
+/* ─── Mobile gesture & drag hardening ──────────────────────
+   -webkit-user-drag: none prevents accidental drag gestures on
+   interactive elements from being mistaken for scroll/swipe and
+   consuming the tap event before the click fires.
+   -webkit-tap-highlight-color: rgba(0,0,0,0) removes the grey
+   flash overlay that some WebKit versions render BEFORE dispatching
+   the click — on buggy builds this flash can swallow the event.
+   Horizontal scroll containers get touch-action: pan-x so the
+   browser knows to pass vertical gestures through to click handlers. */
+@media (max-width: 768px) {
+  * {
+    -webkit-user-drag: none !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+  }
+  .menu-tabs-container,
+  .gallery-filters {
+    touch-action: pan-x !important;
+  }
+}
+

@@ -78,22 +78,23 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
           page sections (which are z-index:1 from the stacking-context cleanup). */}
       <div className="sticky top-16 md:top-20 z-[99999] bg-[var(--color-bg)]">
         <div className="max-w-7xl mx-auto px-5 md:px-8">
-          <div className="category-tabs flex overflow-x-auto pb-px gap-8 md:gap-12 md:justify-center border-b border-[var(--color-border)]">
+          <div className="menu-tabs-container category-tabs flex overflow-x-auto pb-px gap-8 md:gap-12 md:justify-center border-b border-[var(--color-border)]">
             {categories.map((cat) => {
               const label = locale === "ar" ? cat.categoryAr : cat.category;
               const isActive = cat.id === activeCategory;
               return (
-                <button
+                <a
                   key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`shrink-0 font-display px-2 py-5 text-base md:text-lg tracking-wide transition-all cursor-pointer border-b-2 -mb-px whitespace-nowrap ${
+                  href={`#cat-${cat.id}`}
+                  onClick={(e) => { e.preventDefault(); setActiveCategory(cat.id); }}
+                  className={`shrink-0 font-display px-2 py-5 text-base md:text-lg tracking-wide transition-all cursor-pointer border-b-2 -mb-px whitespace-nowrap no-underline ${
                     isActive
                       ? "border-[var(--color-accent)] text-[var(--color-text)] font-semibold"
                       : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-text)]"
                   }`}
                 >
                   {label}
-                </button>
+                </a>
               );
             })}
           </div>
@@ -104,17 +105,18 @@ export default function MenuClient({ locale, categories, dietaryLabels, labels }
         {/* Dietary filters */}
         <div className="flex flex-wrap gap-2 mb-8">
           {dietaryFilters.map(({ key, label }) => (
-            <button
+            <a
               key={key}
-              onClick={() => setDietaryFilter(key)}
-              className={`px-4 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer ${
+              href={`#filter-${key}`}
+              onClick={(e) => { e.preventDefault(); setDietaryFilter(key); }}
+              className={`px-4 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer no-underline ${
                 dietaryFilter === key
                   ? "bg-[var(--color-text)] text-white border-[var(--color-text)]"
                   : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-text)] hover:text-[var(--color-text)]"
               }`}
             >
               {label}
-            </button>
+            </a>
           ))}
         </div>
 
