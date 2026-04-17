@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Lightbox from "yet-another-react-lightbox";
@@ -28,6 +28,11 @@ const FILTERS: { key: GalleryCategory | "all"; labelKey: keyof GalleryClientProp
 export default function GalleryClient({ locale, images, labels }: GalleryClientProps) {
   const [filter, setFilter] = useState<GalleryCategory | "all">("all");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const filtered = images.filter((img) => filter === "all" || img.category === filter);
 
@@ -56,18 +61,15 @@ export default function GalleryClient({ locale, images, labels }: GalleryClientP
       </div>
 
       {/* Masonry grid */}
-      <AnimatePresence>
-        <div className="masonry-grid">
-          {filtered.map((img, i) => {
+      <div className="masonry-grid">
+        {isMobile ? (
+          // Mobile: plain divs — no Framer Motion, no layout animations,
+          // no stacking contexts that could intercept touch events.
+          filtered.map((img, i) => {
             const alt = locale === "ar" ? img.altAr : img.alt;
             return (
-              <motion.div
+              <div
                 key={img.src}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4, delay: i * 0.04 }}
                 className="masonry-item group relative overflow-hidden cursor-pointer bg-[var(--color-surface-2)]"
                 onClick={() => setLightboxIndex(i)}
                 role="button"
@@ -80,20 +82,55 @@ export default function GalleryClient({ locale, images, labels }: GalleryClientP
                     src={img.src}
                     alt={alt}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, 25vw"
+                    className="object-cover"
+                    sizes="50vw"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                    <span className="text-white text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      {alt}
-                    </span>
-                  </div>
                 </div>
-              </motion.div>
+              </div>
             );
-          })}
-        </div>
-      </AnimatePresence>
+          })
+        ) : (
+          // Desktop: animated grid with layout transitions.
+          // opacity starts at 1 — only y animates — so items are never
+          // invisible even if animate() misfires.
+          <AnimatePresence>
+            {filtered.map((img, i) => {
+              const alt = locale === "ar" ? img.altAr : img.alt;
+              return (
+                <motion.div
+                  key={img.src}
+                  layout
+                  initial={{ opacity: 1, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, delay: i * 0.04 }}
+                  className="masonry-item group relative overflow-hidden cursor-pointer bg-[var(--color-surface-2)]"
+                  onClick={() => setLightboxIndex(i)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View photo: ${alt}`}
+                  onKeyDown={(e) => e.key === "Enter" && setLightboxIndex(i)}
+                >
+                  <div className="relative w-full" style={{ paddingTop: i % 3 === 0 ? "133%" : "75%" }}>
+                    <Image
+                      src={img.src}
+                      alt={alt}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="25vw"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                      <span className="text-white text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {alt}
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        )}
+      </div>
 
       {/* Lightbox */}
       {lightboxIndex !== null && (
