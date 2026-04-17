@@ -323,11 +323,17 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   /* Ensure interactive elements are always above any invisible overlays
-     (compositing layers, gradient divs) that may capture tap events. */
-  button, a, select, input {
+     (compositing layers, gradient divs) that may capture tap events.
+     touch-action: manipulation kills the 300ms tap delay and disables
+     double-tap-to-zoom so the browser routes taps directly to click handlers.
+     z-index: 9999 ensures no AnimatedSection padding or stacking context
+     can sit above a tappable element. */
+  button, a, [role="button"], select, input {
     position: relative !important;
-    z-index: 60 !important;
+    z-index: 9999 !important;
     pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Active-state feedback so you can confirm the device is registering
