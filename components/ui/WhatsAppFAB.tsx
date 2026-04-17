@@ -15,7 +15,7 @@ export default function WhatsAppFAB() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
-      className="fixed bottom-24 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full shadow-lg md:bottom-8"
+      className="fixed bottom-28 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full shadow-lg md:bottom-8"
       style={{ background: "#25D366" }}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
