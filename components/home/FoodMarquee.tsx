@@ -36,7 +36,7 @@ export default function FoodMarquee() {
   return (
     // reducedMotion="never" ensures the marquee always runs regardless of OS setting
     <MotionConfig reducedMotion="never">
-      <div className="overflow-hidden py-6 bg-[var(--color-surface)] space-y-4">
+      <div className="overflow-x-hidden py-6 bg-[var(--color-surface)] space-y-4" suppressHydrationWarning>
         {/* Row 1 — slides left. dir="ltr" overrides page RTL so flex always
             lays out left-to-right and the translateX loop math stays correct. */}
         <div className="overflow-hidden" dir="ltr">
