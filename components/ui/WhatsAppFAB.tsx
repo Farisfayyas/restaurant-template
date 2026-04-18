@@ -10,14 +10,11 @@ export default function WhatsAppFAB() {
   const href = buildGreetingWhatsAppUrl(restaurant.name, locale);
 
   return (
-    // dir="ltr" forces this element's direction context to LTR so that
-    // insetInlineEnd always resolves to physical right, regardless of whether
-    // the page is RTL (Arabic) or LTR (English).
     <div
-      dir="ltr"
       style={{
         position: "fixed",
         insetInlineEnd: "24px",
+        insetInlineStart: "auto",
         bottom: "160px",
         zIndex: 9999,
       }}
