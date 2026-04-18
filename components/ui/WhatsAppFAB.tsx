@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useLocale } from "next-intl";
 import { buildGreetingWhatsAppUrl } from "@/lib/whatsapp";
 import restaurant from "@/config/restaurant.config";
@@ -8,6 +9,15 @@ import { motion } from "framer-motion";
 export default function WhatsAppFAB() {
   const locale = useLocale();
   const href = buildGreetingWhatsAppUrl(restaurant.name, locale);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   return (
     <motion.a
@@ -16,7 +26,16 @@ export default function WhatsAppFAB() {
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
       className="fixed bottom-36 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full shadow-lg md:bottom-8 md:right-8"
-      style={{ background: "#25D366" }}
+      style={{
+        background: "#25D366",
+        ...(isMobile && {
+          bottom: "160px",
+          right: "24px",
+          left: "auto",
+          position: "fixed",
+          zIndex: 9999,
+        }),
+      }}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: 1.5, type: "spring", stiffness: 300, damping: 20 }}
